@@ -1,7 +1,7 @@
 #include <iostream>
 #include "locale.h"
 using namespace std;
-int k = 3;
+int k = 5;
 //int t = 2 * k - 1;
 int* q = new int[k];
 
@@ -140,17 +140,17 @@ int* DivNum(int first[], int second[])
 	obnul(div, k);
 	int borrow = 0;
 	int temp = 0;
-	for (int i = 0; i < k; i++)
+	for (int i = 1; i < k+1; i++)
 	{
-		temp = first[i]-second[i]-borrow;
+		temp = first[k-i]-second[k-i]-borrow;
 		if (temp>=0)
 		{
-			div[i] = temp;
+			div[k-i] = temp;
 			borrow = 0;
 		}
 		else
 		{
-			div[i] = temp + 2;
+			div[k-i] = temp + 2;
 			borrow = 1;
 		}
 	}
@@ -175,22 +175,22 @@ int* modul(int num[], int m[])
 	obnul(modNum, k);
 	int* m2= new int[k];
 	obnul(m2, k);
-	for (int i = 0; i < k+1; i++)
+	for (int i = 0; i < k; i++)
 	{
 		modNum[i] = num[i];
 	}
 	int t1 = high(m);
-	while (compare(modNum,m,k+1)<2)
+	while (compare(modNum,m)<2)
 	{
 		int t2 = high(modNum);
 		t2 = t2 - t1;
-		for (int i = 0; i < k - t2 + 1; i++)
+		for (int i = 0; i < k - t2; i++)
 		{
 			m2[i] = m[i + t2];
 		}
 		if (compare(modNum,m2)==2)
 		{
-			for (int i = k - 2; i > 0; i--)
+			for (int i = k - 2; i >= 0; i--)
 			{
 				m2[i + 1] = m2[i];
 			}
@@ -198,12 +198,6 @@ int* modul(int num[], int m[])
 		}
 		modNum = DivNum(modNum,m2);
 	}
-	/*for (int i = 0; i < k; i++)
-	{
-		modNum[i] = modNum[i + 1];
-	}
-	modNum[k] = 0;*/
-	outArr(modNum);
 	return modNum;
 }
 int* Multiple(int first[], int second[])
@@ -223,44 +217,106 @@ int* Multiple(int first[], int second[])
 		matrixL[i] = new int[k];
 		obnul(matrixL[i],k);
 	}
-	for (int i = 1; i < k+1; i++)
+	int** mL = new int* [k];
+	for (int i = 0; i < k; i++)
 	{
-		for (int j = 1; j < k+1; j++)
+		mL[i] = new int[k];
+		obnul(mL[i], k);
+	}
+	j2 = pTo2();
+	for (int i = 0; i < k; i++)
+	{
+		i2[k - i-1] = 1;
+		b = modul(i2, j2);
+		for (int j = 0; j < k; j++)
 		{
-			i2[k - i] = 1;
-			cout << "i2   ";
-			outArr(i2,k);
-			cout << endl;
-			j2[k - j] = 1;
-			cout << " j2   ";
-			outArr(j2,k);
-			cout << endl;
-			i2 = sumNum(i2,j2);
-			cout << "  sumNum(i2,j2)   ";
-			outArr(i2,k);
-			cout << endl;
-			j2 = pTo2();
-			cout << "   p   ";
-			outArr(j2,k);
-			cout << endl;
-			b = modul(i2,j2);
-			cout << "    modul(i2,j2)   ";
-			outArr(b);
-			cout << endl;
-			if (compare(b,mult)==0)
+			mL[i][j] = b[j];
+		}
+		obnul(i2,k);
+	}
+	matrixL[k - 1][k - 1] = 1;
+	for (int i = 0; i < k; i++)
+	{
+		for (int j = 0; j < k; j++)
+		{
+			//2^i + 2^j
+			for (int h = 0; h < k; h++)
+			{
+				i2[h] = mL[i][h];
+				b[h] = mL[j][h];
+			}
+			i2 = sumNum(i2,b);
+			if (compare(i2,j2)<2)
+			{
+				i2 = DivNum(i2,j2);
+			}
+			if (compare(i2,mult)==0)
 			{
 				matrixL[i][j] = 1;
-				cout << "Уиииииииииииииииииииииииииииииииииииии";
 			}
-			obnul(i2, k + 1);
-			obnul(j2, k + 1);
+
+			//- 2^i - 2^j
+			for (int h = 0; h < k; h++)
+			{
+				i2[h] = mL[i][h];
+				b[h] = mL[j][h];
+			}
+			i2 = sumNum(i2, b);
+			if (compare(i2, j2) < 2)
+			{
+				i2 = DivNum(i2, j2);
+			}
+			i2 = DivNum(j2, i2);
+			if (compare(i2, mult) == 0)
+			{
+				matrixL[i][j] = 1;
+			}
+
+			//2^i - 2^j
+			for (int h = 0; h < k; h++)
+			{
+				i2[h] = mL[i][h];
+				b[h] = mL[j][h];
+			}
+			if (i<j)
+			{
+				i2 = DivNum(b,i2);
+				i2 = DivNum(j2, i2);
+			}
+			if (i > j)
+			{
+				i2 = DivNum(i2, b);
+			}
+			if (i == j) i2 = obnul(i2,k);
+			if (compare(i2, mult) == 0)
+			{
+				matrixL[i][j] = 1;
+			}
+
+			//- 2^i + 2^j
+			for (int h = 0; h < k; h++)
+			{
+				i2[h] = mL[i][h];
+				b[h] = mL[j][h];
+			}
+			if (i < j)
+			{
+				i2 = DivNum(b, i2);
+			}
+			if (i > j)
+			{
+				i2 = DivNum(i2, b);
+				i2 = DivNum(j2, i2);
+			}
+			if (i == j) i2 = obnul(i2, k);
+			if (compare(i2, mult) == 0)
+			{
+				matrixL[i][j] = 1;
+			}
 		}
 		outArr(matrixL[i]);
 		cout << endl;
 	}
-	obnul(mult,k);
 	delete[] b;
-	delete[] i2;
-	delete[] j2;
 	return mult;
 }
