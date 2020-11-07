@@ -21,27 +21,36 @@ int main()
 	mul = obnul(mul, k);
 	inv = obnul(inv, k);
 	square = obnul(square, k);
-	cout << "Ââåäèòå ïåðâûé ýëåìåíò:   ";
+	cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð¿ÐµÑ€Ð²Ñ‹Ð¹ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚:   ";
 	cin >> firstNum;
 	first = strToArr(firstNum);
-	cout << "Ââåäèòå âòîðîé ýëåìåíò:   ";
+	cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð²Ñ‚Ð¾Ñ€Ð¾Ð¹ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚:   ";
 	cin >> secondNum;
 	second = strToArr(secondNum);
 
 	sum = Add(first, second);
-	cout << "Ñóììà:   ";
+	cout << "Ð¡ÑƒÐ¼Ð¼Ð°:   ";
 	outArr(sum);
 	cout << endl;
 
 	square = Squa(first);
-	cout << "Êâàäðàò:   ";
+	cout << "ÐšÐ²Ð°Ð´Ñ€Ð°Ñ‚ Ð¿ÐµÑ€Ð²Ð¾Ð³Ð¾:   ";
+	outArr(square);
+	cout << endl;
+	square = Squa(second);
+	cout << "ÐšÐ²Ð°Ð´Ñ€Ð°Ñ‚ Ð²Ñ‚Ð¾Ñ€Ð¾Ð³Ð¾:   ";
 	outArr(square);
 	cout << endl;
 
 	tr = trace(first);
-	cout << "Ñëåä:   " << tr << endl;
+	cout << "Ð¡Ð»ÐµÐ´ Ð¿ÐµÑ€Ð²Ð¾Ð³Ð¾:   " << tr << endl;
+	tr = trace(second);
+	cout << "Ð¡Ð»ÐµÐ´ Ð²Ñ‚Ð¾Ñ€Ð¾Ð³Ð¾:   " << tr << endl;
 
 	mul = Multiple(first, second);
+	cout << "Ð£Ð¼Ð½Ð¾Ð¶ÐµÐ½Ð¸Ðµ:   ";
+	outArr(mul);
+	cout << endl << endl;
 
 	delete[] first;
 	delete[] second;
