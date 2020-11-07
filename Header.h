@@ -356,3 +356,27 @@ int* Multiple(int first[], int second[])
 	delete[] mL;
 	return mult;
 }
+int* Degr(int num[], int deg[])
+{
+	int* degree = new int[k];
+	degree = obnul(degree, k);
+	degree=OneEl();
+	for (int i = k - high(deg); i < k; i++)
+	{
+		if (deg[i] == 1) degree = Multiple(degree, num);
+		if (i != k - 1) degree = Squa(degree);
+	}
+	return degree;
+}
+int* inverse(int num[])
+{
+	int* inv = new int[k];
+	inv = obnul(inv, k);
+	inv = OneEl();
+	for (int i = 0; i < k-1; i++)
+	{
+		inv = Multiple(inv, num);
+		inv = Squa(inv);
+	}
+	return inv;
+}
