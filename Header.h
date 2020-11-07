@@ -1,7 +1,7 @@
 #include <iostream>
 #include "locale.h"
 using namespace std;
-int k = 5;
+int k = 3;
 //int t = 2 * k - 1;
 int* q = new int[k];
 
@@ -317,6 +317,42 @@ int* Multiple(int first[], int second[])
 		outArr(matrixL[i]);
 		cout << endl;
 	}
-	delete[] b;
+	b = obnul(b,k);
+	mult = obnul(mult,k);
+	for (int h = 0; h < k; h++)
+	{
+		for (int i = 0; i < k; i++)
+		{
+			for (int j = 0; j < k; j++)
+			{
+				b[i] = b[i] + first[j] * matrixL[i][j];
+				b[i] %= 2;
+			}
+		}
+		for (int i = 0; i < k; i++)
+		{
+			mult[h] = mult[h] + b[i] * second[i];
+			mult[h] %= 2;
+		}
+		int f = first[0];
+		int s = second[0];
+		for (int i = 0; i < k-1; i++)
+		{
+			first[i] = first[i + 1];
+			second[i] = second[i + 1];
+		}
+		first[k - 1] = f;
+		second[k - 1] = s;
+		b = obnul(b,k);
+	}
+	cout << "  mult:";
+	outArr(mult);
+	cout << endl << endl;
+	
+	for (int i = 0; i < k; i++)
+	{
+		delete[] mL[i];
+	}
+	delete[] mL;
 	return mult;
 }
