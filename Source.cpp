@@ -51,6 +51,19 @@ int main()
 	cout << "Умножение:   ";
 	outArr(mul);
 	cout << endl << endl;
+	
+	cout << "В какую степень вы хотите вознести первый полином? (в двоичном виде, не более чем 2^{n}-1)" << endl;
+	cin >> deg;
+	degree = strToArr(deg);
+	degree = Degr(first, degree);
+	cout << "Степень:   ";
+	outArr(degree);
+	cout << endl;
+
+	inv = inverse(first);
+	cout << "Обратный:   ";
+	outArr(inv, k);
+	cout << endl;
 
 	delete[] first;
 	delete[] second;
