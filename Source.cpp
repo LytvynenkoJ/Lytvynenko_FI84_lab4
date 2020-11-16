@@ -12,8 +12,8 @@ int main()
 	int* mul = new int[k];
 	int* inv = new int[k];
 	int* square = new int[k];
-	int tr =0;
 	int* degree = new int[k];
+	int tr =0;
 	degree = obnul(degree, k);
 	first = obnul(first, k);
 	second = obnul(second, k);
@@ -27,43 +27,77 @@ int main()
 	cout << "Введите второй элемент:   ";
 	cin >> secondNum;
 	second = strToArr(secondNum);
+	cout << endl;
 
 	sum = Add(first, second);
 	cout << "Сумма:   ";
 	outArr(sum);
 	cout << endl;
+	cout << dec << "Время работы суммы в наносекундах : "
+		<< chrono::duration_cast<chrono::nanoseconds>(endtime - start).count()
+		<< " ns" << endl << endl;
 
 	square = Squa(first);
 	cout << "Квадрат первого:   ";
 	outArr(square);
 	cout << endl;
+	cout << dec << "Время работы квадрата в наносекундах : "
+		<< chrono::duration_cast<chrono::nanoseconds>(en - st).count()
+		<< " ns" << endl << endl;
 	square = Squa(second);
 	cout << "Квадрат второго:   ";
 	outArr(square);
 	cout << endl;
+	cout << dec << "Время работы квадрата в наносекундах : "
+		<< chrono::duration_cast<chrono::nanoseconds>(en - st).count()
+		<< " ns" << endl << endl;
 
 	tr = trace(first);
 	cout << "След первого:   " << tr << endl;
+	cout << dec << "Время работы функции следа в наносекундах : "
+		<< chrono::duration_cast<chrono::nanoseconds>(endtime - start).count()
+		<< " ns" << endl << endl;
 	tr = trace(second);
 	cout << "След второго:   " << tr << endl;
+	cout << dec << "Время работы функции следа в наносекундах : "
+		<< chrono::duration_cast<chrono::nanoseconds>(endtime - start).count()
+		<< " ns" << endl << endl;
 
-	mul = Multiple(first, second);
+	int** matrixL = new int* [k];
+	for (int i = 0; i < k; i++)
+	{
+		matrixL[i] = new int[k];
+		obnul(matrixL[i], k);
+	}
+	matrixL = MatrixLam();
+
+	mul = Multiple(first, second, matrixL);
 	cout << "Умножение:   ";
-	outArr(mul);
-	cout << endl << endl;
-	
+	outArr(mul,0);
+	cout << endl;
+	cout << dec << "Время работы умножения в наносекундах : "
+		<< chrono::duration_cast<chrono::nanoseconds>(en - st).count()
+		<< " ns" << endl << endl;
+
 	cout << "В какую степень вы хотите вознести первый полином? (в двоичном виде, не более чем 2^{n}-1)" << endl;
 	cin >> deg;
+	cout << endl;
 	degree = strToArr(deg);
-	degree = Degr(first, degree);
+	degree = Degr(first, degree, matrixL);
 	cout << "Степень:   ";
 	outArr(degree);
 	cout << endl;
+	cout << dec << "Время работы степени в наносекундах : "
+		<< chrono::duration_cast<chrono::nanoseconds>(endtime - start).count()
+		<< " ns" << endl << endl;
 
-	inv = inverse(first);
+	inv = inverse(first, matrixL);
 	cout << "Обратный:   ";
-	outArr(inv, k);
+	outArr(inv);
 	cout << endl;
+	cout << dec << "Время работы нахождения обратного в наносекундах : "
+		<< chrono::duration_cast<chrono::nanoseconds>(endtime - start).count()
+		<< " ns" << endl << endl;
 
 	delete[] first;
 	delete[] second;
