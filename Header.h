@@ -1,9 +1,18 @@
 #include <iostream>
+#include <ctime>
+#include <chrono>
+#include <iomanip>
+#include "time.h"
+#include <string>
 #include "locale.h"
 using namespace std;
-int k = 3;
+int k = 239+1;
 //int t = 2 * k - 1;
 int* q = new int[k];
+auto start = chrono::steady_clock::now();
+auto endtime = chrono::steady_clock::now();
+auto st = chrono::steady_clock::now();
+auto en = chrono::steady_clock::now();
 
 
 int* obnul(int arr[], int c)
@@ -60,9 +69,9 @@ int* strToArr(string num)
 	}
 	return arr;
 }
-void outArr(int arr[], int c=k)
+void outArr(int arr[], int c=1)
 {
-	for (int i = 0; i < c; i++)
+	for (int i = c; i < k; i++)
 	{
 		cout << arr[i];
 	}
@@ -71,30 +80,36 @@ int* Add(int first[], int second[])
 {
 	int* sum = new int[k];
 	obnul(sum,k);
+	start = chrono::steady_clock::now();
 	for (int i = 0; i < k; i++)
 	{
 		sum[i] = (first[i] + second[i]) % 2;
 	}
+	endtime = chrono::steady_clock::now();
 	return sum;
 }
 int* Squa(int num[])
 {
 	int* square = new int[k];
 	square = obnul(square, k);
-	square[0] = num[k - 1];
-	for (int i = 0; i < k - 1; i++)
+	st = chrono::steady_clock::now();
+	square[1] = num[k - 1];
+	for (int i = 1; i < k - 1; i++)
 	{
 		square[i+1] = num[i];
 	}
+	en = chrono::steady_clock::now();
 	return square;
 }
 int trace(int num[])
 {
 	int tr=0;
+	start = chrono::steady_clock::now();
 	for (int i = 0; i < k; i++)
 	{
 		tr = (tr + num[i]) % 2;
 	}
+	endtime = chrono::steady_clock::now();
 	return tr;
 }
 int* sumNum(int fN[], int sN[])
@@ -103,10 +118,10 @@ int* sumNum(int fN[], int sN[])
 	obnul(summa,k);
 	int carry = 0;
 	int temp = 0;
-	for (int i = 1; i < k+2; i++)
+	for (int i = 0; i < k; i++)
 	{
-		temp = fN[k - i] + sN[k - i] + carry;
-		summa[k - i] = temp % 2;
+		temp = fN[k - i - 1] + sN[k - i - 1] + carry;
+		summa[k - i - 1] = temp % 2;
 		carry = temp / 2;
 	}
 	return summa;
@@ -115,7 +130,7 @@ int* pTo2()
 {
 	int* p = new int[k];
 	obnul(p, k);
-	int y = 2 * k + 1;
+	int y = 2 * (k-1) + 1;
 	int i = k-1;
 	while (y!=0)
 	{
@@ -190,6 +205,8 @@ int* modul(int num[], int m[])
 		}
 		if (compare(modNum,m2)==2)
 		{
+			t2 -= 1;
+			if (t2 < 0) return modNum;
 			for (int i = k - 2; i >= 0; i--)
 			{
 				m2[i + 1] = m2[i];
@@ -197,10 +214,12 @@ int* modul(int num[], int m[])
 			m2[0] = 0;
 		}
 		modNum = DivNum(modNum,m2);
+		obnul(m2, k);
 	}
+	delete[] m2;
 	return modNum;
 }
-int* Multiple(int first[], int second[])
+int** MatrixLam()
 {
 	int* mult = new int[k];
 	obnul(mult, k);
@@ -208,175 +227,165 @@ int* Multiple(int first[], int second[])
 	int* b = new int[k];
 	obnul(b, k);
 	int* i2 = new int[k];
-	obnul(i2, k+1);
-	int* j2 = new int[k];
-	obnul(j2, k+1);
+	obnul(i2, k);
+	int* p = new int[k];
+	obnul(p, k);
 	int** matrixL = new int* [k];
 	for (int i = 0; i < k; i++)
 	{
 		matrixL[i] = new int[k];
-		obnul(matrixL[i],k);
+		obnul(matrixL[i], k);
 	}
-	int** mL = new int* [k];
+	p = pTo2();
+	int** mL = new int* [k-1];
 	for (int i = 0; i < k; i++)
 	{
 		mL[i] = new int[k];
 		obnul(mL[i], k);
-	}
-	j2 = pTo2();
-	for (int i = 0; i < k; i++)
-	{
-		i2[k - i-1] = 1;
-		b = modul(i2, j2);
+		i2[k - i - 1] = 1;
+		b = modul(i2, p);
 		for (int j = 0; j < k; j++)
 		{
 			mL[i][j] = b[j];
 		}
-		obnul(i2,k);
+		obnul(i2, k);
 	}
+	//cout << endl << endl;
 	matrixL[k - 1][k - 1] = 1;
-	for (int i = 0; i < k; i++)
+	for (int i = 1; i < k; i++)
 	{
-		for (int j = 0; j < k; j++)
+		for (int j = 1; j < k; j++)
 		{
 			//2^i + 2^j
 			for (int h = 0; h < k; h++)
 			{
-				i2[h] = mL[i][h];
-				b[h] = mL[j][h];
+				i2[h] = mL[i-1][h];
+				b[h] = mL[j-1][h];
 			}
-			i2 = sumNum(i2,b);
-			if (compare(i2,j2)<2)
+			q = sumNum(i2,b);
+			if (compare(q,p)!=2)
 			{
-				i2 = DivNum(i2,j2);
+				q = DivNum(q,p);
 			}
-			if (compare(i2,mult)==0)
+			if (compare(q,mult)==0)
 			{
 				matrixL[i][j] = 1;
+				//cout << "2^i + 2^j            i=" << i << "    j=" << j <<  endl;
+			}
+			else
+			{
+				if (compare(DivNum(p,q), mult) == 0)
+				{
+					matrixL[i][j] = 1;
+					//cout << "  - 2^i - 2^j            i=" << i << "    j=" << j << endl;
+				}
 			}
 
-			//- 2^i - 2^j
+			//-2^i + 2^j
 			for (int h = 0; h < k; h++)
 			{
-				i2[h] = mL[i][h];
-				b[h] = mL[j][h];
+				i2[h] = mL[i - 1][h];
+				b[h] = mL[j - 1][h];
 			}
-			i2 = sumNum(i2, b);
-			if (compare(i2, j2) < 2)
+			q = obnul(q,k);
+			if (compare(i2,b)==1)
 			{
-				i2 = DivNum(i2, j2);
+				q = DivNum(i2,b);
+				q = DivNum(p,q);
 			}
-			i2 = DivNum(j2, i2);
-			if (compare(i2, mult) == 0)
+			if (compare(i2,b)==2)
 			{
-				matrixL[i][j] = 1;
+				q = DivNum(b, i2);
 			}
-
-			//2^i - 2^j
-			for (int h = 0; h < k; h++)
-			{
-				i2[h] = mL[i][h];
-				b[h] = mL[j][h];
-			}
-			if (i<j)
-			{
-				i2 = DivNum(b,i2);
-				i2 = DivNum(j2, i2);
-			}
-			if (i > j)
-			{
-				i2 = DivNum(i2, b);
-			}
-			if (i == j) i2 = obnul(i2,k);
-			if (compare(i2, mult) == 0)
+			if (compare(q, mult) == 0)
 			{
 				matrixL[i][j] = 1;
+				//cout << "    - 2^i + 2^j            i=" << i << "    j=" << j << endl;
 			}
-
-			//- 2^i + 2^j
-			for (int h = 0; h < k; h++)
+			else
 			{
-				i2[h] = mL[i][h];
-				b[h] = mL[j][h];
-			}
-			if (i < j)
-			{
-				i2 = DivNum(b, i2);
-			}
-			if (i > j)
-			{
-				i2 = DivNum(i2, b);
-				i2 = DivNum(j2, i2);
-			}
-			if (i == j) i2 = obnul(i2, k);
-			if (compare(i2, mult) == 0)
-			{
-				matrixL[i][j] = 1;
+				if (compare(DivNum(p, q), mult) == 0)
+				{
+					matrixL[i][j] = 1;
+					//cout << "      2^i - 2^j            i=" << i << "    j=" << j << endl;
+				}
 			}
 		}
-		outArr(matrixL[i]);
-		cout << endl;
+		//outArr(matrixL[i]);
+		//cout << endl << endl;
 	}
+	delete[] i2;
+	delete[] p;
+	delete[] b;
+	delete[] mult;
+	return matrixL;
+}
+int* Multiple(int first[], int second[], int** matrixL)
+{
+	int* mult = new int[k];
+	obnul(mult, k);
+	int* b = new int[k];
 	b = obnul(b,k);
 	mult = obnul(mult,k);
-	for (int h = 0; h < k; h++)
+	st = chrono::steady_clock::now();
+	for (int h = 1; h < k; h++)
 	{
+		b = obnul(b, k);
 		for (int i = 0; i < k; i++)
 		{
 			for (int j = 0; j < k; j++)
 			{
-				b[i] = b[i] + first[j] * matrixL[i][j];
-				b[i] %= 2;
+				if (matrixL[j][i]==1)
+				{
+					b[i] = b[i] + first[j];
+					b[i] = b[i] % 2;
+				}
+			}
+			if (second[i] == 1)
+			{
+				mult[h] += b[i];
+				mult[h] %= 2;
 			}
 		}
-		for (int i = 0; i < k; i++)
-		{
-			mult[h] = mult[h] + b[i] * second[i];
-			mult[h] %= 2;
-		}
-		int f = first[0];
-		int s = second[0];
-		for (int i = 0; i < k-1; i++)
+		int f = first[1];
+		int s = second[1];
+		for (int i = 1; i < k-1; i++)
 		{
 			first[i] = first[i + 1];
 			second[i] = second[i + 1];
 		}
-		first[k - 1] = f;
-		second[k - 1] = s;
-		b = obnul(b,k);
+		first[k-1] = f;
+		second[k-1] = s;
 	}
-	cout << "  mult:";
-	outArr(mult);
-	cout << endl << endl;
-	
-	for (int i = 0; i < k; i++)
-	{
-		delete[] mL[i];
-	}
-	delete[] mL;
+	en = chrono::steady_clock::now();
+	delete[] b;
 	return mult;
 }
-int* Degr(int num[], int deg[])
+int* Degr(int num[], int deg[], int** matrixL)
 {
 	int* degree = new int[k];
 	degree = obnul(degree, k);
+	start = chrono::steady_clock::now();
 	degree=OneEl();
 	for (int i = k - high(deg); i < k; i++)
 	{
-		if (deg[i] == 1) degree = Multiple(degree, num);
+		if (deg[i] == 1) degree = Multiple(degree, num, matrixL);
 		if (i != k - 1) degree = Squa(degree);
 	}
+	endtime = chrono::steady_clock::now();
 	return degree;
 }
-int* inverse(int num[])
+int* inverse(int num[], int** matrixL)
 {
 	int* inv = new int[k];
 	inv = obnul(inv, k);
+	start = chrono::steady_clock::now();
 	inv = OneEl();
-	for (int i = 0; i < k-1; i++)
+	for (int i = 1; i < k-1; i++)
 	{
-		inv = Multiple(inv, num);
+		inv = Multiple(inv, num, matrixL);
 		inv = Squa(inv);
 	}
+	endtime = chrono::steady_clock::now();
 	return inv;
 }
