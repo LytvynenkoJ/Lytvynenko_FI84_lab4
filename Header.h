@@ -389,3 +389,38 @@ int* inverse(int num[], int** matrixL)
 	endtime = chrono::steady_clock::now();
 	return inv;
 }
+int* AB(int first[], int second[], int third[], int** matrixL)
+{
+	int* d = new int[k];
+	d = obnul(d, k);
+	d = Add(Multiple(first, third, matrixL), Multiple(second, third, matrixL));
+	cout << "A*C+B*C    ";
+	outArr(d);
+	cout << endl;
+	d = obnul(d, k);
+	d = Multiple(Add(first, second), third, matrixL);
+	cout << "(A+B)*C    ";
+	outArr(d);
+	cout << endl;
+	return d;
+}
+int* firM(int num[], int** matrixL)
+{
+	int* d = new int[k];
+	d = obnul(d, k);
+	int* n = new int[k];
+	n = obnul(n, k);
+	for (int i = 0; i < k; i++)
+	{
+		n[i] = num[i];
+	}
+	d = inverse(num, matrixL);
+	cout << "num^{-1}   ";
+	outArr(d);
+	cout << endl;
+	d = Multiple(d, n, matrixL);
+	cout << "num^{-1}*num   ";
+	outArr(d);
+	cout << endl;
+	return d;
+}
