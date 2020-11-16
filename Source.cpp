@@ -98,6 +98,12 @@ int main()
 	cout << dec << "Время работы нахождения обратного в наносекундах : "
 		<< chrono::duration_cast<chrono::nanoseconds>(endtime - start).count()
 		<< " ns" << endl << endl;
+	
+	AB(first, second, degree, matrixL);
+	cout << endl;
+
+	firM(first, matrixL);
+	cout << endl;
 
 	delete[] first;
 	delete[] second;
