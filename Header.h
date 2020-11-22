@@ -250,7 +250,6 @@ int** MatrixLam()
 		}
 		obnul(i2, k);
 	}
-	//cout << endl << endl;
 	matrixL[k - 1][k - 1] = 1;
 	for (int i = 1; i < k; i++)
 	{
@@ -270,14 +269,12 @@ int** MatrixLam()
 			if (compare(q,mult)==0)
 			{
 				matrixL[i][j] = 1;
-				//cout << "2^i + 2^j            i=" << i << "    j=" << j <<  endl;
 			}
 			else
 			{
 				if (compare(DivNum(p,q), mult) == 0)
 				{
 					matrixL[i][j] = 1;
-					//cout << "  - 2^i - 2^j            i=" << i << "    j=" << j << endl;
 				}
 			}
 
@@ -300,19 +297,15 @@ int** MatrixLam()
 			if (compare(q, mult) == 0)
 			{
 				matrixL[i][j] = 1;
-				//cout << "    - 2^i + 2^j            i=" << i << "    j=" << j << endl;
 			}
 			else
 			{
 				if (compare(DivNum(p, q), mult) == 0)
 				{
 					matrixL[i][j] = 1;
-					//cout << "      2^i - 2^j            i=" << i << "    j=" << j << endl;
 				}
 			}
 		}
-		//outArr(matrixL[i]);
-		//cout << endl << endl;
 	}
 	delete[] i2;
 	delete[] p;
@@ -389,6 +382,49 @@ int* inverse(int num[], int** matrixL)
 	endtime = chrono::steady_clock::now();
 	return inv;
 }
+int* Ito(int num[], int** matrixL)
+{
+	int* m = new int[k];
+	int* inver = new int[k];
+	int* b = new int[k];
+	obnul(b,k);
+	obnul(m, k);
+	obnul(inver, k);
+	int y = k - 2;
+	int i = k - 1;
+	int cou = -1;
+	while (y != 0)
+	{
+		m[i] = y % 2;
+		y = y / 2;
+		i--; cou++;
+	}
+	for (int i = 0; i < k; i++)
+	{
+		inver[i] = num[i];
+	}
+	int c = 1;
+	start = chrono::steady_clock::now();
+	for (int i = 0; i < cou; i++)
+	{
+		b = Squa(inver);
+		for (int i = 0; i < c-1; i++)
+		{
+			b = Squa(b);
+		}
+		inver = Multiple(inver, b, matrixL);
+		c = 2 * c;
+		if (m[k-cou+i]==1)
+		{
+			inver = Squa(inver);
+			inver = Multiple(inver, num, matrixL);
+			c += 1;
+		}
+	}
+	inver = Squa(inver);
+	endtime = chrono::steady_clock::now();
+	return inver;
+}
 int* AB(int first[], int second[], int third[], int** matrixL)
 {
 	int* d = new int[k];
@@ -414,7 +450,7 @@ int* firM(int num[], int** matrixL)
 	{
 		n[i] = num[i];
 	}
-	d = inverse(num, matrixL);
+	d = Ito(num, matrixL);
 	cout << "num^{-1}   ";
 	outArr(d);
 	cout << endl;
