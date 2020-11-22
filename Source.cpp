@@ -92,13 +92,21 @@ int main()
 		<< " ns" << endl << endl;
 
 	inv = inverse(first, matrixL);
-	cout << "Обратный:   ";
+	cout << "Обратный (в лоб):   ";
 	outArr(inv);
 	cout << endl;
 	cout << dec << "Время работы нахождения обратного в наносекундах : "
 		<< chrono::duration_cast<chrono::nanoseconds>(endtime - start).count()
 		<< " ns" << endl << endl;
-	
+
+	inv = Ito(first, matrixL);
+	cout << "Обратный (Ито Цудзии):   ";
+	outArr(inv);
+	cout << endl;
+	cout << dec << "Время работы нахождения обратного в наносекундах : "
+		<< chrono::duration_cast<chrono::nanoseconds>(endtime - start).count()
+		<< " ns" << endl << endl;
+
 	AB(first, second, degree, matrixL);
 	cout << endl;
 
