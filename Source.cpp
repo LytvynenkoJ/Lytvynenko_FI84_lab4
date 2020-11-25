@@ -73,7 +73,7 @@ int main()
 
 	mul = Multiple(first, second, matrixL);
 	cout << "Умножение:   ";
-	outArr(mul,0);
+	outArr(mul);
 	cout << endl;
 	cout << dec << "Время работы умножения в наносекундах : "
 		<< chrono::duration_cast<chrono::nanoseconds>(en - st).count()
